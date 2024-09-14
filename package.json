@@ -1,0 +1,20 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dados.js",
+  "scripts": {
+    "start": "node dados.js",
+    "dev": "nodemon dados.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "git": "^0.1.5",
+    "mongoose": "^7.5.2",
+    "nodemailer": "^6.9.7",
+    "nodemon": "^3.1.4"
+  }
+}
