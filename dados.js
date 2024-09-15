@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   console.log("middware ativado");
   next();
 });
-//DADOS REFERENTES A PROJETOS
+//DADOS REFERENTES A PROJETOS.
 app.listen(3000, () => {
   console.log("conectado a porta " + 3000);
   app.get("/arquivo", (req, res) => {
