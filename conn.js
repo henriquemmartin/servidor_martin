@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 async function main() {
   const uri =
-    "mongodb+srv://henriquemmartin:lYIJj2cp1bUmhXoT@bancoprincipal.4eorn.mongodb.net/?retryWrites=true&w=majority&appName=bancoPrincipal";
+    "mongodb://mongo:YRYkGEucVKOtPSqTGfQgzCdpSZzQcaZm@autorack.proxy.rlwy.net:14111";
 
 //bando de dados_usaername henriquemmartin senha lYIJj2cp1bUmhXoT
   await mongoose.connect(uri);
