@@ -48,6 +48,7 @@ app.post("/message", (req, res) => {
   res.send("Adicionado com Sucesso");
 });
 app.put("/message", (req, res) => {
+  console.log("*Clicou em atualizar");
   const texto = req.body;
   atualiza_valor(texto);
   console.log(texto);
@@ -55,6 +56,7 @@ app.put("/message", (req, res) => {
   res.send("Atualizado com Sucesso");
 });
 app.delete("/message", (req, res) => {
+  console.error("****Clicou em deletar");
   const texto = req.body;
   deleta_valor(texto);
   res.send("Deletado com Sucesso");

@@ -7,10 +7,18 @@ async function adiciona_valor(valor) {
   console.log("cadastrado novo projeto");
 }
 async function atualiza_valor(valor) {
-  await Projetos.findOneAndUpdate({ _id: valor.id }, valor);
-  console.log("Projeto Atualizado");
+  const garopaba = new Projetos(valor);
+  console.log("Tentando Atualizar valor");
+  try {
+    await Projetos.findOneAndUpdate({ _id: valor.id }, valor);
+    console.error("Projeto atualizado")
+  } catch (error) {
+    console.error(`ERRO ENCONTRADO!: ${error.message}`);
+  }
 }
 async function deleta_valor(valor) {
+  const garopaba = new Projetos(valor);
+  console.error("chegou em funçao deletar")
   await Projetos.deleteOne({ _id: valor.id });
   console.log("Projeto Apagado");
 }
