@@ -21,6 +21,7 @@ const projetosSchema = new mongoose.Schema(
     tour: { type: String },
     drive: { type: String },
     categoria: { type: String },
+    categoria2: { type: String },
   },
   { timestamps: true }
 );
