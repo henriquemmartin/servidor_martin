@@ -2,10 +2,19 @@ console.log("ENTROU EM MODEL3.JS");
 const mongoose = require("mongoose");
 const contadorSchema = new mongoose.Schema(
   {
-    pagina: { type: String, required: true },
-    informacao: { type: String, required: false },
+    nome: { type: String, required: true },
+    largura: { type: Number},
+    comprimento: { type: Number},
+    cidade: { type: String },
+    estado: { type: String },
+    email: { type: String },
+    telefone: { type: String },
+    projeto: { type: String },
+    projetoNome: { type: String },
+    valor: { type: Number},
+    enviado: { type: String },
   },
   { timestamps: true }
 );
-const Contagem = mongoose.model("Contagem", contadorSchema);
-module.exports = Contagem;
+const Venda = mongoose.model("Venda", contadorSchema);
+module.exports = Venda;
