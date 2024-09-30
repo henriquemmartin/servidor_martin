@@ -33,25 +33,22 @@ async function adiciona_valor2(valor) {
 
 //VENDASSSSSSSSSSS
 async function adiciona_valor3(valor) {
+  console.log("chegou na raiz de adiciona valor 3");
   const garopaba3 = new Venda(valor);
   await garopaba3.save();
   console.log("nova contagem cadastradas");
 }
-
 async function atualiza_valor3(valor3) {
+  console.log("chegou na raiz de atualiza valor 3");
   const garopaba3 = new Venda(valor3);
-  console.log("Tentando Atualizar valor --> "+valor3.nome);
-  try {
-    await Venda.findOneAndUpdate({ _id: valor3.id }, valor3);
-    console.error("Projeto atualizado")
-  } catch (error) {
-    console.error(`ERRO ENCONTRADO!: ${error.message}`);
-  }
+  await Venda.findOneAndUpdate({ _id: valor3.id }, valor3);
+  console.log("nova contagem atualizads");
 }
 
+
 async function deleta_valor3(valor) {
-  const garopaba3 = new Venda(valor);
   console.error("chegou em funçao deletar")
+  const garopaba3 = new Venda(valor);
   await Venda.deleteOne({ _id: valor.id });
   console.log("Projeto Apagado");
 }
