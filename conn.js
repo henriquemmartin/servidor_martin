@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 async function main() {
-  const uri =
-    "mongodb://mongo:YRYkGEucVKOtPSqTGfQgzCdpSZzQcaZm@autorack.proxy.rlwy.net:14111";
-
+  const uri = process.env.MONGODB_URI
+ 
 //bando de dados_usaername henriquemmartin senha lYIJj2cp1bUmhXoT
 //mongodb://mongo:YRYkGEucVKOtPSqTGfQgzCdpSZzQcaZm@autorack.proxy.rlwy.net:14111
 //bando de dados teste username henriquemmartin senha RiluhWPjASwVcsC5
