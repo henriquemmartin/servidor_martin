@@ -10,6 +10,7 @@ const contadorSchema = new mongoose.Schema(
     email: { type: String },
     telefone: { type: String },
     projeto: { type: String },
+    projeto2: { type: String },
     projetoNome: { type: String },
     valor: { type: Number},
     enviado: { type: String },

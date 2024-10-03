@@ -32,11 +32,27 @@ app.listen(3000, () => {
   app.get("/arquivo", (req, res) => {
     res.send(dadosLidos);
   });
-  app.get("/movimento", (req, res) => {
-    res.send(contagemLidos);
-  });
   app.get("/venda", (req, res) => {
     res.send(vendaLidos);
+  });
+  // URL: http://localhost:3000/users?nome=Joao&idade=25
+app.get('/users', (req, res) => {
+  const nome = req.query.nome;
+  const idade = req.query.idade;
+  res.send(`Nome: ${nome}, Idade: ${idade}`);
+});
+
+  app.get("/login", (req, res) =>{
+    const login = req.query.login
+    const senha = req.query.senha
+    if(login=="henrique" & senha=="martin"){
+      res.send({"liberado": 1,"apelido": login })
+    } else {
+      res.send({"liberado": 0,"apelido": login })
+    }
+  })
+  app.get("/movimento", (req, res) => {
+    res.send(contagemLidos);
   });
 });
 
@@ -82,10 +98,6 @@ app.delete("/message", async (req, res) => {
     res.status(500).send("Erro ao processar a venda");
   }
 });
-
-
-
-
 //DADOS REFERENTES A VENDAS
 var vendaLidos = [];
 async function ler3() {
@@ -133,6 +145,8 @@ app.post("/refresh", (req, res) => {
   ler3();
   res.json({ message: 'Sistema atualizado com sucesso!' });
 });
+//DADOS REFERENTEA A LOGIN
+
 //DADOS REFERENTES A CONTAGEM
 var contagemLidos = [];
 async function ler2() {
