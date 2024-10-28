@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Projetos = require("./model");
 const Contagem = require("./model2");
 const Venda = require("./model3");
+const Parceria = require("./model4");
 
 async function adiciona_valor(valor) {
   const garopaba = new Projetos(valor);
@@ -52,6 +53,13 @@ async function deleta_valor3(valor) {
   await Venda.deleteOne({ _id: valor.id });
   console.log("Projeto Apagado");
 }
+//PARCERIAS
+async function adiciona_valor4(valor) {
+  console.log("chegou na raiz de adiciona valor 4");
+  const garopaba4 = new Parceria(valor);
+  await garopaba4.save();
+  console.log("nova contagem cadastradas");
+}
 module.exports = {
   adiciona_valor,
   atualiza_valor,
@@ -60,4 +68,5 @@ module.exports = {
   adiciona_valor3,
   deleta_valor3,
   atualiza_valor3,
+  adiciona_valor4,
 };

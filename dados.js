@@ -12,6 +12,7 @@ const {
   adiciona_valor3,
   deleta_valor3,
   atualiza_valor3,
+  adiciona_valor4,
 
 } = require("./adiciona");
 main();
@@ -19,6 +20,7 @@ console.log("DE VOLTA A DADOS.JS");
 const app = express();
 var cors = require("cors");
 const Venda = require("./model3");
+const Parceria = require("./model4");
 app.use(express.json({ extended: true }));
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -30,25 +32,31 @@ app.use((req, res, next) => {
 app.listen(3000, () => {
   console.log("conectado a porta " + 3000);
   app.get("/arquivo", (req, res) => {
+    console.log("chegou em projetos")
     res.send(dadosLidos);
   });
   app.get("/venda", (req, res) => {
+    console.log("chegou em vendas")
     res.send(vendaLidos);
   });
+  app.get("/parceria", (req, res) => {
+    console.log("chegou em parcerias")
+    res.send(parceriaLidos);
+  });
   // URL: http://localhost:3000/users?nome=Joao&idade=25
-app.get('/users', (req, res) => {
-  const nome = req.query.nome;
-  const idade = req.query.idade;
-  res.send(`Nome: ${nome}, Idade: ${idade}`);
-});
+  app.get('/users', (req, res) => {
+    const nome = req.query.nome;
+    const idade = req.query.idade;
+    res.send(`Nome: ${nome}, Idade: ${idade}`);
+  });
 
-  app.get("/login", (req, res) =>{
+  app.get("/login", (req, res) => {
     const login = req.query.login
     const senha = req.query.senha
-    if(login=="henrique" & senha=="martin"){
-      res.send({"liberado": 1,"apelido": login })
+    if (login == "henrique" & senha == "martin") {
+      res.send({ "liberado": 1, "apelido": login })
     } else {
-      res.send({"liberado": 0,"apelido": login })
+      res.send({ "liberado": 0, "apelido": login })
     }
   })
   app.get("/movimento", (req, res) => {
@@ -164,9 +172,28 @@ app.post("/contagem", (req, res) => {
   ler2();
   res.send("Adicionado com Sucesso");
 });
-
+//DADOS REFERENTES A PARCERIA
+var parceriaLidos = [];
+async function ler4() {
+  console.log("função ler4 (parceria)");
+  parceriaLidos = await Parceria.find().sort({ _id: -1 }).limit(200);
+}
+app.post("/parceria", async (req, res) => {
+  console.log("chegou em GET - post - parceria");
+  try {
+    const texto = req.body;
+    console.log(texto);
+    await adiciona_valor4(texto);
+    await ler4();
+    res.send("BackEnd: Recebidos dados com Sucesso");
+  } catch (error) {
+    console.error("Erro ao processar a solicitação", error);
+    res.status(500).send("Erro ao processar a venda");
+  }
+});
 ler();
 ler2();
 ler3();
+ler4();
 module.exports = { dadosLidos };
 
