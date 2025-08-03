@@ -191,29 +191,9 @@ app.post("/parceria", async (req, res) => {
     res.status(500).send("Erro ao processar a venda");
   }
 });
-//DADOS REFERENTES A CASAS EM CONSTUCAO
-var parceriaLidos = [];
-async function ler5() {
-  console.log("função ler5 (CASAS)");
-  parceriaLidos = await Casas.find().sort({ _id: -1 }).limit(200);
-}
-app.post("/casasConstrucao", async (req, res) => {
-  console.log("chegou em GET - post - casas");
-  try {
-    const texto = req.body;
-    console.log(texto);
-    await adiciona_valor5(texto);
-    await ler5();
-    res.send("BackEnd: Recebidos dados com Sucesso");
-  } catch (error) {
-    console.error("Erro ao processar a solicitação", error);
-    res.status(500).send("Erro ao processar a venda");
-  }
-});
 ler();
 ler2();
 ler3();
 ler4();
-ler5();
 module.exports = { dadosLidos };
 

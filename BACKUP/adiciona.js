@@ -3,7 +3,6 @@ const Projetos = require("./model");
 const Contagem = require("./model2");
 const Venda = require("./model3");
 const Parceria = require("./model4");
-const casasConstrucao = require("./model4");
 
 async function adiciona_valor(valor) {
   const garopaba = new Projetos(valor);
@@ -61,13 +60,6 @@ async function adiciona_valor4(valor) {
   await garopaba4.save();
   console.log("nova contagem cadastradas");
 }
-//CASAS A VENDA
-async function adiciona_valor5(valor) {
-  console.log("chegou na raiz de adiciona valor 5(casas a venda)");
-  const garopaba5 = new casasConstrucao(valor);
-  await garopaba5.save();
-  console.log("nova contagem cadastradas");
-}
 module.exports = {
   adiciona_valor,
   atualiza_valor,
@@ -77,5 +69,4 @@ module.exports = {
   deleta_valor3,
   atualiza_valor3,
   adiciona_valor4,
-  adiciona_valor5,
 };
