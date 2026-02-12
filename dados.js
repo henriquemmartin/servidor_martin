@@ -1,15 +1,9 @@
 console.log("INICIANDO DADOS.JS");
-
 const express = require("express");
-const cors = require("cors");
-
 const main = require("./conn");
-
 const Projetos = require("./model");
 const Contagem = require("./model2");
-const Venda = require("./model3");
-const Parceria = require("./model4");
-
+const socketIo = require("socket.io")
 const {
   adiciona_valor,
   atualiza_valor,
@@ -19,191 +13,245 @@ const {
   deleta_valor3,
   atualiza_valor3,
   adiciona_valor4,
+  adiciona_valor5,
+  atualiza_valor5,
+  deleta_valor5,
+  
+
 } = require("./adiciona");
-
+main();
+console.log("DE VOLTA A DADOS.JS");
 const app = express();
-app.use(express.json());
-app.use(cors());
+var cors = require("cors");
+const Venda = require("./model3");
+const Parceria = require("./model4");
+const Casa = require("./model5");
+app.use(express.json({ extended: true }));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  app.use(cors());
+  next();
+});
 
-/* =========================
-   VARIÁVEIS DE MEMÓRIA
-========================= */
-let dadosLidos = [];
-let vendaLidos = [];
-let contagemLidos = [];
-let parceriaLidos = [];
 
-/* =========================
-   FUNÇÕES DE LEITURA
-========================= */
+app.listen(3000, () => {
+  console.log("conectado a porta " + 3000);
+  app.get("/arquivo", (req, res) => {
+    console.log("chegou em projetos")
+    res.send(dadosLidos);
+  });
+  app.get("/venda", (req, res) => {
+    console.log("chegou em vendas")
+    res.send(vendaLidos);
+  });
+  app.get("/parceria", (req, res) => {
+    console.log("chegou em parcerias (get)")
+    res.send(parceriaLidos);
+  });
+    app.get("/casa", (req, res) => {
+    console.log("chegou em casas")
+    res.send(casaLidos);
+  });
+  // URL: http://localhost:3000/users?nome=Joao&idade=25
+  app.get('/users', (req, res) => {
+    const nome = req.query.nome;
+    const idade = req.query.idade;
+    res.send(`Nome: ${nome}, Idade: ${idade}`);
+  });
+
+  app.get("/login", (req, res) => {
+    const login = req.query.login
+    const senha = req.query.senha
+    if (login == "henrique" & senha == "martin") {
+      res.send({ "liberado": 1, "apelido": login })
+    } else {
+      res.send({ "liberado": 0, "apelido": login })
+    }
+  })
+  app.get("/movimento", (req, res) => {
+      console.log("chegou em GET - movimento");
+    res.send(contagemLidos);
+  });
+});
+
+//DADOS REFERENTES A PROJETOS.
+var dadosLidos = [];
+
 async function ler() {
   console.log("função ler()");
   dadosLidos = await Projetos.find();
+  console.log("dados lidos com sucesso!");
 }
 
-async function ler2() {
-  console.log("função ler2()");
-  contagemLidos = await Contagem.find().sort({ _id: -1 }).limit(200);
-}
-
+app.post("/message", async (req, res) => {
+  console.log("chegou em GET - message");
+  try {
+    const texto = req.body;
+    await adiciona_valor(texto);
+    await ler();
+    res.send("BackEnd: Adicionado com sucesso");
+  } catch (error) {
+    console.error("Erro ao processar a venda:", error);
+    res.status(500).send("Erro ao processar a venda");
+  }
+});
+app.put("/message", async (req, res) => {
+  try {
+    const texto = req.body;
+    await atualiza_valor(texto);
+    await ler();
+    res.send("BackEnd: atualizado com sucesso");
+  } catch (error) {
+    console.error("Erro ao processar a venda:", error);
+    res.status(500).send("Erro ao processar a venda");
+  }
+});
+app.delete("/message", async (req, res) => {
+  try {
+    const texto = req.body;
+    await deleta_valor(texto);
+    await ler();
+    res.send("BackEnd: deletado com sucesso");
+  } catch (error) {
+    console.error("Erro ao processar a venda:", error);
+    res.status(500).send("Erro ao processar a venda");
+  }
+});
+//DADOS REFERENTES A VENDAS
+var vendaLidos = [];
 async function ler3() {
   console.log("função ler3 (vendas)");
   vendaLidos = await Venda.find().sort({ _id: -1 }).limit(200);
 }
+app.post("/venda", async (req, res) => {
+  console.log("chegou em GET - post");
+  try {
+    const texto = req.body;
+    console.log(texto);
+    await adiciona_valor3(texto);
+    await ler3();
+    res.send("BackEnd: Adicionado e vendas lidas com sucesso");
+  } catch (error) {
+    console.error("Erro ao processar a venda:", error);
+    res.status(500).send("Erro ao processar a venda");
+  }
+});
+app.put("/venda", async (req, res) => {
+  try {
+    const texto = req.body;
+    console.log(texto);
+    await atualiza_valor3(texto);
+    await ler3();
+    res.send("BackEnd: atualizado com sucesso");
+  } catch (error) {
+    console.error("Erro ao processar a venda:", error);
+    res.status(500).send("Erro ao processar a venda");
+  }
+});
+app.delete("/venda", async (req, res) => {
+  try {
+    const texto = req.body;
+    await deleta_valor3(texto);
+    await ler3();
+    res.send("BackEnd: deletado com sucesso");
+  } catch (error) {
+    console.error("Erro ao processar a venda:", error);
+    res.status(500).send("Erro ao processar a venda");
+  }
+});
+app.post("/refresh", (req, res) => {
+  console.log("****Clicou em REFRESH ");
+  ler3();
+  res.json({ message: 'Sistema atualizado com sucesso!' });
+});
+//DADOS REFERENTEA A LOGIN
 
+//DADOS REFERENTES A CONTAGEM
+var contagemLidos = [];
+async function ler2() {
+  console.log("função ler2()");
+  contagemLidos = await Contagem.find().sort({ _id: -1 }).limit(200);
+  console.log("contagem dados lidos com sucesso!");
+}
+app.post("/contagem", (req, res) => {
+  console.log("*Clicou em atualizar");
+  res.send("Vendas Adicionado com Sucesso");
+  const texto2 = req.body;
+  adiciona_valor2(texto2);
+  if (texto2.informacao == "***CLICOU EM COMPRAR (whatsapp)***") {
+  }
+  ler2();
+  res.send("Adicionado com Sucesso");
+});
+//DADOS REFERENTES A PARCERIA
+var parceriaLidos = [];
 async function ler4() {
   console.log("função ler4 (parceria)");
   parceriaLidos = await Parceria.find().sort({ _id: -1 }).limit(200);
 }
-
-/* =========================
-   ROTAS GET
-========================= */
-app.get("/arquivo", (req, res) => {
-  return res.json(dadosLidos);
-});
-
-app.get("/venda", (req, res) => {
-  return res.json(vendaLidos);
-});
-
-app.get("/parceria", (req, res) => {
-  return res.json(parceriaLidos);
-});
-
-app.get("/movimento", (req, res) => {
-  return res.json(contagemLidos);
-});
-
-app.get("/users", (req, res) => {
-  const { nome, idade } = req.query;
-  return res.send(`Nome: ${nome}, Idade: ${idade}`);
-});
-
-app.get("/login", (req, res) => {
-  const { login, senha } = req.query;
-  if (login === "henrique" && senha === "martin") {
-    return res.json({ liberado: 1, apelido: login });
-  }
-  return res.json({ liberado: 0, apelido: login });
-});
-
-/* =========================
-   ROTAS PROJETOS
-========================= */
-app.post("/message", async (req, res) => {
-  try {
-    await adiciona_valor(req.body);
-    await ler();
-    return res.send("Adicionado com sucesso");
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send("Erro ao adicionar projeto");
-  }
-});
-
-app.put("/message", async (req, res) => {
-  try {
-    await atualiza_valor(req.body);
-    await ler();
-    return res.send("Atualizado com sucesso");
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send("Erro ao atualizar projeto");
-  }
-});
-
-app.delete("/message", async (req, res) => {
-  try {
-    await deleta_valor(req.body);
-    await ler();
-    return res.send("Deletado com sucesso");
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send("Erro ao deletar projeto");
-  }
-});
-
-/* =========================
-   ROTAS VENDAS
-========================= */
-app.post("/venda", async (req, res) => {
-  try {
-    await adiciona_valor3(req.body);
-    await ler3();
-    return res.send("Venda adicionada com sucesso");
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send("Erro ao processar venda");
-  }
-});
-
-app.put("/venda", async (req, res) => {
-  try {
-    await atualiza_valor3(req.body);
-    await ler3();
-    return res.send("Venda atualizada com sucesso");
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send("Erro ao atualizar venda");
-  }
-});
-
-app.delete("/venda", async (req, res) => {
-  try {
-    await deleta_valor3(req.body);
-    await ler3();
-    return res.send("Venda deletada com sucesso");
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send("Erro ao deletar venda");
-  }
-});
-
-/* =========================
-   ROTAS CONTAGEM
-========================= */
-app.post("/contagem", async (req, res) => {
-  try {
-    await adiciona_valor2(req.body);
-    await ler2();
-    return res.send("Contagem adicionada com sucesso");
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send("Erro ao adicionar contagem");
-  }
-});
-
-/* =========================
-   ROTAS PARCERIA
-========================= */
 app.post("/parceria", async (req, res) => {
+  console.log("chegou em GET - post - parceria");
   try {
-    await adiciona_valor4(req.body);
+    const texto = req.body;
+    console.log(texto);
+    await adiciona_valor4(texto);
     await ler4();
-    return res.send("Parceria registrada com sucesso");
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send("Erro ao registrar parceria");
+    res.send("BackEnd: Recebidos dados com Sucesso");
+  } catch (error) {
+    console.error("Erro ao processar a solicitação", error);
+    res.status(500).send("Erro ao processar a venda");
   }
 });
-
-/* =========================
-   START DO SERVIDOR
-========================= */
-(async () => {
+async function ler3() {
+  console.log("função ler3 (vendas)");
+  vendaLidos = await Venda.find().sort({ _id: -1 }).limit(200);
+}
+//DADOS REFERENTES A CASAS
+var casaLidos = [];
+async function ler5() {
+  console.log("função ler5 (casas)");
+  casaLidos = await Casa.find().sort({ _id: -1 }).limit(200);
+}
+app.post("/casa", async (req, res) => {
+  console.log("chegou em GET - post - casas");
   try {
-    await main(); // conecta Mongo
-    await ler();
-    await ler2();
-    await ler3();
-    await ler4();
-
-    app.listen(3000, () => {
-      console.log("Servidor rodando na porta 3000");
-    });
-  } catch (err) {
-    console.error("Erro fatal ao iniciar servidor:", err);
-    process.exit(1);
+    const texto = req.body;
+    console.log(texto);
+    await adiciona_valor5(texto);
+    await ler5();
+    res.send("BackEnd: Recebidos dados com Sucesso");
+  } catch (error) {
+    console.error("Erro ao processar a solicitação", error);
+    res.status(500).send("Erro ao processar a venda");
   }
-})();
+});
+app.put("/casa", async (req, res) => {
+  try {
+    const texto = req.body;
+    console.log("texto:"+texto);
+    await atualiza_valor5(texto);
+    await ler5();
+    res.send("BackEnd: atualizado com sucesso");
+  } catch (error) {
+    console.error("Erro ao processar a venda:", error);
+    res.status(500).send("Erro ao processar a venda");
+  }
+});
+app.delete("/casa", async (req, res) => {
+  try {
+    const texto = req.body;
+    await deleta_valor5(texto);
+    await ler5();
+    res.send("BackEnd: deletado com sucesso");
+  } catch (error) {
+    console.error("Erro ao processar a venda:", error);
+    res.status(500).send("Erro ao processar a venda");
+  }
+});
+ler();
+ler2();
+ler3();
+ler4();
+ler5();
+module.exports = { dadosLidos };
+
