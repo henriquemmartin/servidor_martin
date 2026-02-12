@@ -1,23 +1,15 @@
 const mongoose = require("mongoose");
-require("dotenv").config();
+require('dotenv').config();
+async function main() {
+  const uri = process.env.MONGODB_URI
+ 
+//bando de dados_usaername henriquemmartin senha lYIJj2cp1bUmhXoT
+//mongodb://mongo:YRYkGEucVKOtPSqTGfQgzCdpSZzQcaZm@autorack.proxy.rlwy.net:14111
+//bando de dados teste username henriquemmartin senha RiluhWPjASwVcsC5
+//mongodb+srv://henriquemmartin:RiluhWPjASwVcsC5@cluster0.dkvnt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+  await mongoose.connect(uri);
+  console.log("conectado ao bando de dados Primario!");
+}
+module.exports = main;
+//ok
 
-module.exports = async function main() {
-  try {
-    const uri = process.env.MONGODB_URI;
-
-    if (!uri) {
-      throw new Error("MONGODB_URI não definida no .env");
-    }
-
-    await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 5000, // 5s no máximo
-    });
-
-    console.log("MongoDB CONECTADO com sucesso");
-
-  } catch (err) {
-    console.error("❌ ERRO AO CONECTAR NO MONGODB:");
-    console.error(err.message);
-    process.exit(1); // ⬅️ MATA o servidor se não conectar
-  }
-};
